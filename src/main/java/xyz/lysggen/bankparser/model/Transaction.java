@@ -1,9 +1,17 @@
 package xyz.lysggen.bankparser.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-@Entity
-public class DataRow {
-    @Id @GeneratedValue
+import java.util.List;
+
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@Entity(name ="transaction")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Transaction {
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String description;
     private String date;
@@ -13,10 +21,14 @@ public class DataRow {
     @ManyToOne
     @JoinColumn
     private Category category;
-    @OneToOne
-    @JoinColumn
+    @OneToOne()
+    @JoinColumn(nullable = false)
+    @JsonIgnore
     private BankStatement bankStatement;
-
+    @Transient
+    private List<Keyword> keywords;
+    @Transient
+    private List<Category> possibleCategories;
     public BankStatement getBankStatement() {
         return bankStatement;
     }
@@ -80,6 +92,20 @@ public class DataRow {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    public List<Keyword> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<Keyword> keywords) {
+        this.keywords = keywords;
+    }
+    public List<Category> getPossibleCategories() {
+        return possibleCategories;
+    }
+
+    public void setPossibleCategories(List<Category> possibleCategories) {
+        this.possibleCategories = possibleCategories;
     }
 
 

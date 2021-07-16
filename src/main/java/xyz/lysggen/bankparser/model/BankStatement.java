@@ -1,20 +1,23 @@
 package xyz.lysggen.bankparser.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BankStatement {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String account;
     private Date startDate;
     private Date endDate;
     private String name;
     @Transient
-    private List<DataRow> dataRows;
+    private List<Transaction> transactions;
 
     public Date getStartDate() {
         return startDate;
@@ -59,12 +62,12 @@ public class BankStatement {
         this.id = id;
     }
 
-    public List<DataRow> getDataRows() {
-        return dataRows;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setDataRows(List<DataRow> dataRows) {
-        this.dataRows = dataRows;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
 }

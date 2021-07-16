@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import xyz.lysggen.bankparser.model.BankStatement;
-import xyz.lysggen.bankparser.model.DataRow;
+import xyz.lysggen.bankparser.model.Transaction;
 import xyz.lysggen.bankparser.service.BankDataParser;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
@@ -21,13 +20,13 @@ class BankparserApplicationTests {
 	}
 	@Test
 	public void readDataTest() {
-		Assertions.assertThrows(NullPointerException.class, () -> bankDataParser.readData(null));
+		Assertions.assertThrows(NullPointerException.class, () -> bankDataParser.readData((String) null));
 		byte[] array = new byte[7]; // length is bounded by 7
 		new Random().nextBytes(array);
 		Assertions.assertNull(bankDataParser.readData(new String(array, StandardCharsets.UTF_8)));
 		BankStatement bankStatement = bankDataParser.readData("src/main/resources/static/output.txt");
 		Assertions.assertNotNull(bankStatement);
-		Assertions.assertNotNull(bankStatement.getDataRows());
+		Assertions.assertNotNull(bankStatement.getTransactions());
 	}
 	@Test
 	public void parseBankStatementTest() {
@@ -51,7 +50,7 @@ class BankparserApplicationTests {
 		Assertions.assertThrows(NullPointerException.class, () -> bankDataParser.parseRow(null) );
 		Assertions.assertNull(bankDataParser.parseRow(""));
 		Assertions.assertNull(bankDataParser.parseRow("1	2	3"));
-		DataRow row = bankDataParser.parseRow("\"Hello\",\"0102\",\"3231\",\"0\",\"0102\"");
+		Transaction row = bankDataParser.parseRow("\"Hello\",\"0102\",\"3231\",\"0\",\"0102\"");
 		Assertions.assertNotNull(row);
 		Assertions.assertEquals("Hello", row.getDescription());
 		Assertions.assertEquals("0102",row.getDate());

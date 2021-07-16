@@ -2,17 +2,12 @@ package xyz.lysggen.bankparser.service;
 
 import org.springframework.stereotype.Service;
 import xyz.lysggen.bankparser.model.BankStatement;
-import xyz.lysggen.bankparser.model.DataRow;
+import xyz.lysggen.bankparser.model.Transaction;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -20,13 +15,24 @@ import java.util.regex.Pattern;
 
 @Service
 public class BankDataParser {
-    private static final Pattern bankAccount = Pattern.compile("");
     private static final Pattern period = Pattern.compile("(\\d{4}\\.\\d{2}\\.\\d{5}) i perioden (\\d{2}\\.\\d{2}\\.\\d{4}) - (\\d{2}\\.\\d{2}\\.\\d{4}) (.*)");
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
+
     public BankStatement readData(String filename) {
+        return readData(new File(filename));
+    }
+    public BankStatement readData(File file) {
+        try {
+            return readData(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public BankStatement readData(InputStreamReader isr) {
         BankStatement bankStatement = new BankStatement();
-        List<DataRow> rows = new ArrayList<>();
-        try (BufferedReader tsvReader = new BufferedReader(new FileReader(filename));){
+        List<Transaction> rows = new ArrayList<>();
+        try (BufferedReader tsvReader = new BufferedReader(isr)){
             String current = tsvReader.readLine();
             boolean hasFoundTable = false;
             boolean hasFoundAccount = false;
@@ -62,7 +68,7 @@ public class BankDataParser {
             return null;
         }
         System.out.println(rows);
-        bankStatement.setDataRows(rows);
+        bankStatement.setTransactions(rows);
         return bankStatement;
     }
     public BankStatement parseBankStatement(String line) {
@@ -149,7 +155,7 @@ public class BankDataParser {
         return i;
     }
 
-    public DataRow parseRow(String data) {
+    public Transaction parseRow(String data) {
         if (data == null) {
             throw new NullPointerException();
         }
@@ -160,7 +166,7 @@ public class BankDataParser {
         if (d.length != 5) {
             return null;
         }
-        DataRow row = new DataRow();
+        Transaction row = new Transaction();
         row.setDescription(d[0].replace("\"",""));
         row.setDate(d[1].replace("\"",""));
         row.setAmountIn(parseDouble(d[2]));
