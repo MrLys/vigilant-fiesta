@@ -1,8 +1,11 @@
 package xyz.lysggen.bankparser.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Keyword {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

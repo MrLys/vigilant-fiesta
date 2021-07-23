@@ -42,7 +42,7 @@ public class BankStatementController {
             account.setAccountNumber(bankStatement.getAccount());
             bankAccountRepository.save(account);
         }
-        bankStatement.getTransactions().stream().forEach(t -> {
+        bankStatement.getTransactions().forEach(t -> {
             t.setPossibleCategories(matchMakingService.getCategorySuggestions(t));
             t.setKeywords(matchMakingService.getKeywords(t));
         });
