@@ -3,7 +3,7 @@ package xyz.lysggen.bankparser.model;
 import javax.persistence.*;
 
 @Entity
-public class Keyword {
+public class Keyword extends DatabaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
@@ -11,6 +11,9 @@ public class Keyword {
     @OneToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
     public int getId() {
         return id;

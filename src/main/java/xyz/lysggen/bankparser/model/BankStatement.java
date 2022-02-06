@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class BankStatement {
+public class BankStatement extends DatabaseModel {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String account;
@@ -18,6 +18,9 @@ public class BankStatement {
     private String name;
     @Transient
     private List<Transaction> transactions;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
     public Date getStartDate() {
         return startDate;

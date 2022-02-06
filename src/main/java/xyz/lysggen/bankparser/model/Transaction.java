@@ -10,7 +10,7 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Entity(name ="transaction")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Transaction {
+public class Transaction extends DatabaseModel {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String description;
@@ -29,6 +29,9 @@ public class Transaction {
     private List<Keyword> keywords;
     @Transient
     private List<Category> possibleCategories;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private User user;
     public BankStatement getBankStatement() {
         return bankStatement;
     }

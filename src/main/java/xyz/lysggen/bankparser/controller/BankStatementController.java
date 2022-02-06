@@ -2,7 +2,7 @@ package xyz.lysggen.bankparser.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.lysggen.bankparser.model.Account;
+import xyz.lysggen.bankparser.model.BankAccount;
 import xyz.lysggen.bankparser.model.BankStatement;
 import xyz.lysggen.bankparser.repository.BankAccountRepository;
 import xyz.lysggen.bankparser.repository.BankStatementRepository;
@@ -37,10 +37,10 @@ public class BankStatementController {
         BankStatement bankStatement = bankStatementRepository.getById(id);
         bankStatement.setTransactions(transactionRepository.getByBankStatementId(id));
         if (bankAccountRepository.getByAccount(bankStatement.getAccount()) == null) {
-            Account account = new Account();
-            account.setName(bankStatement.getName());
-            account.setAccountNumber(bankStatement.getAccount());
-            bankAccountRepository.save(account);
+            BankAccount bankAccount = new BankAccount();
+            bankAccount.setName(bankStatement.getName());
+            bankAccount.setAccountNumber(bankStatement.getAccount());
+            bankAccountRepository.save(bankAccount);
         }
         bankStatement.getTransactions().stream().forEach(t -> {
             t.setPossibleCategories(matchMakingService.getCategorySuggestions(t));
