@@ -4,3 +4,4 @@ An application for parsing bank receipts (?), categorizing expenses and maybe ev
 
 ## Running
 * Start the db in /db/ by running `docker-compose up -d`
+* `gs -ps2ascii -sDEVICE=txtwrite -sOutputFile=outputtext.txt`
