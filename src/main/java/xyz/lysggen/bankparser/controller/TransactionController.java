@@ -14,6 +14,7 @@ public class TransactionController {
     public TransactionController(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/transaction")
     public List<Transaction> getAll() {
         return transactionRepository.findAll();
